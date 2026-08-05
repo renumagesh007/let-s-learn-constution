@@ -1,83 +1,544 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Your Day, Your Constitution</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Work+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Citizen Constitution Explorer & Quiz</title>
+  <style>
+    :root {
+      --primary: #1e3a8a;
+      --secondary: #0d9488;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --success: #16a34a;
+      --danger: #dc2626;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 20px;
+    }
+
+    header {
+      text-align: center;
+      max-width: 800px;
+      margin: 0 auto 25px;
+    }
+
+    header h1 {
+      color: var(--primary);
+      font-size: 2.2rem;
+      margin-bottom: 8px;
+    }
+
+    header p {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    /* Main Mode Switcher */
+    .mode-switch {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 25px;
+    }
+
+    .mode-btn {
+      padding: 10px 24px;
+      border: 2px solid var(--primary);
+      background: transparent;
+      color: var(--primary);
+      border-radius: 25px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: all 0.2s;
+    }
+
+    .mode-btn.active, .mode-btn:hover {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    /* Controls: Search & Category Filter */
+    .controls {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+
+    @media (min-width: 600px) {
+      .controls {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+      }
+    }
+
+    .search-box {
+      width: 100%;
+      max-width: 350px;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.95rem;
+      outline: none;
+    }
+
+    .search-box:focus {
+      border-color: var(--secondary);
+    }
+
+    .filter-tabs {
+      display: flex;
+      gap: 8px;
+    }
+
+    .tab-btn {
+      padding: 8px 16px;
+      border: 1px solid var(--border);
+      background: var(--card-bg);
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: 500;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .tab-btn.active {
+      background: var(--secondary);
+      color: #fff;
+      border-color: var(--secondary);
+    }
+
+    /* Grid Layout */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    }
+
+    .card-badge {
+      align-self: flex-start;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 4px 8px;
+      border-radius: 4px;
+      margin-bottom: 12px;
+    }
+
+    .badge-right { background-color: #dbeafe; color: #1e40af; }
+    .badge-duty { background-color: #fef3c7; color: #92400e; }
+
+    .card h3 { font-size: 1.15rem; color: var(--text); margin-bottom: 8px; }
+    .card p { font-size: 0.92rem; color: var(--text-muted); margin-bottom: 16px; }
+
+    .card-footer {
+      border-top: 1px solid var(--border);
+      padding-top: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .article-tag { font-weight: 600; color: var(--secondary); font-size: 0.88rem; }
+    .takeaway { font-size: 0.85rem; font-weight: 500; color: var(--primary); }
+
+    /* Quiz Mode Styling */
+    .quiz-container {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 30px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+      max-width: 650px;
+      margin: 0 auto;
+    }
+
+    .quiz-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .quiz-question {
+      font-size: 1.2rem;
+      color: var(--text);
+      margin-bottom: 20px;
+    }
+
+    .options-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .option-btn {
+      padding: 12px 16px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      border-radius: 8px;
+      text-align: left;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .option-btn:hover:not([disabled]) {
+      border-color: var(--primary);
+      background: #eff6ff;
+    }
+
+    .option-btn.correct {
+      background: #dcfce7;
+      border-color: var(--success);
+      color: var(--success);
+      font-weight: 600;
+    }
+
+    .option-btn.wrong {
+      background: #fee2e2;
+      border-color: var(--danger);
+      color: var(--danger);
+      font-weight: 600;
+    }
+
+    .quiz-feedback {
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      margin-bottom: 20px;
+      display: none;
+    }
+
+    .quiz-feedback.show { display: block; }
+    .quiz-feedback.success { background: #dcfce7; color: #14532d; }
+    .quiz-feedback.error { background: #fee2e2; color: #7f1d1d; }
+
+    .next-btn, .restart-btn {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      float: right;
+    }
+
+    .score-box {
+      text-align: center;
+      padding: 20px;
+    }
+
+    .score-box h2 { color: var(--primary); font-size: 2rem; margin-bottom: 10px; }
+    .score-box p { color: var(--text-muted); margin-bottom: 20px; }
+
+    .hidden { display: none !important; }
+  </style>
 </head>
 <body>
 
-<header class="topbar">
-  <div class="topbar__inner">
-    <span class="logo">Your Day, Your <strong>Constitution</strong></span>
-    <div class="tabs" role="tablist">
-      <button class="tab is-active" data-panel="day" role="tab" aria-selected="true">A Day in Your Life</button>
-      <button class="tab" data-panel="lookup" role="tab" aria-selected="false">Quick Lookup</button>
-      <button class="tab" data-panel="cards" role="tab" aria-selected="false">Flip & Test</button>
+  <div class="container">
+    <header>
+      <h1>Citizen Constitution Explorer</h1>
+      <p>Master rights, duties, and articles through real-world scenarios.</p>
+    </header>
+
+    <div class="mode-switch">
+      <button class="mode-btn active" onclick="switchMode('explorer')">Explorer Mode</button>
+      <button class="mode-btn" onclick="switchMode('quiz')">Quiz Mode</button>
+    </div>
+
+    <!-- EXPLORER MODE -->
+    <div id="explorerView">
+      <div class="controls">
+        <input type="text" id="searchInput" class="search-box" placeholder="Search scenarios, articles, or keywords...">
+        <div class="filter-tabs">
+          <button class="tab-btn active" onclick="filterScenarios('all')">All</button>
+          <button class="tab-btn" onclick="filterScenarios('right')">Rights</button>
+          <button class="tab-btn" onclick="filterScenarios('duty')">Duties</button>
+        </div>
+      </div>
+      <div id="gridContainer" class="grid"></div>
+    </div>
+
+    <!-- QUIZ MODE -->
+    <div id="quizView" class="hidden">
+      <div class="quiz-container">
+        <div id="quizContent">
+          <div class="quiz-header">
+            <span id="questionTracker">Question 1 of 5</span>
+            <span id="scoreTracker">Score: 0</span>
+          </div>
+          <div class="quiz-question" id="quizQuestion">Loading question...</div>
+          <div class="options-grid" id="optionsGrid"></div>
+          <div class="quiz-feedback" id="quizFeedback"></div>
+          <button class="next-btn hidden" id="nextBtn" onclick="nextQuestion()">Next Question</button>
+        </div>
+
+        <div id="quizScoreBox" class="score-box hidden">
+          <h2>Quiz Completed!</h2>
+          <p id="finalScoreText">You scored 0 out of 5.</p>
+          <button class="restart-btn" style="float:none;" onclick="startQuiz()">Try Again</button>
+        </div>
+      </div>
     </div>
   </div>
-</header>
 
-<main>
+  <script>
+    const scenarios = [
+      {
+        id: 1,
+        title: "Police Stop & Detention",
+        description: "You are detained by authorities without being informed of the grounds for your arrest.",
+        type: "right",
+        article: "Article 22",
+        takeaway: "Right to know arrest reasons & consult a lawyer within 24 hrs."
+      },
+      {
+        id: 2,
+        title: "Protecting Public Monuments",
+        description: "Witnessing vandalism or littering at historical heritage sites and national landmarks.",
+        type: "duty",
+        article: "Article 51A(f)",
+        takeaway: "Duty to value and preserve the rich heritage of our culture."
+      },
+      {
+        id: 3,
+        title: "Starting an Online Business",
+        description: "Setting up an e-commerce platform or freelance service anywhere in the country.",
+        type: "right",
+        article: "Article 19(1)(g)",
+        takeaway: "Right to practice any profession, trade, or business."
+      },
+      {
+        id: 4,
+        title: "Environmental Protection",
+        description: "Participating in community clean-up drives, tree planting, and river protection.",
+        type: "duty",
+        article: "Article 51A(g)",
+        takeaway: "Duty to protect and improve the natural environment."
+      },
+      {
+        id: 5,
+        title: "Child Labor Prevention",
+        description: "Children under 14 being employed in hazardous places like factories or mines.",
+        type: "right",
+        article: "Article 24",
+        takeaway: "Prohibits employment of children in hazardous environments."
+      }
+    ];
 
-  <!-- PANEL 1: DAY TIMELINE -->
-  <section class="panel is-active" id="panel-day">
-    <div class="panel__intro">
-      <p class="eyebrow">08 SEP · An ordinary Tuesday</p>
-      <h1>You touch the Constitution before breakfast.<br>You just don't notice.</h1>
-      <p class="lede">Drag the slider through an ordinary day. Every stop is something you already do — and an article of the Constitution quietly making it possible.</p>
-    </div>
+    const quizQuestions = [
+      {
+        question: "Which Article guarantees protection against arbitrary arrest and detention?",
+        options: ["Article 14", "Article 19", "Article 22", "Article 32"],
+        answer: 2,
+        explanation: "Article 22 grants the right to be informed of arrest grounds and consult a lawyer."
+      },
+      {
+        question: "Protecting natural environments like forests and rivers falls under which constitutional provision?",
+        options: ["Directive Principles", "Fundamental Rights", "Fundamental Duties (Art 51A)", "Preamble"],
+        answer: 2,
+        explanation: "Article 51A(g) makes it every citizen's duty to protect and improve the natural environment."
+      },
+      {
+        question: "Which Article explicitly prohibits child labor in hazardous occupations?",
+        options: ["Article 21", "Article 24", "Article 15", "Article 29"],
+        answer: 1,
+        explanation: "Article 24 prohibits employing children below 14 in factories, mines, or hazardous jobs."
+      },
+      {
+        question: "The freedom to practice any profession or trade anywhere in India is guaranteed under:",
+        options: ["Article 19(1)(g)", "Article 21", "Article 14", "Article 25"],
+        answer: 0,
+        explanation: "Article 19(1)(g) secures the right to practice any trade, occupation, or business."
+      },
+      {
+        question: "Fundamental Duties were added under which Article of the Constitution?",
+        options: ["Article 12", "Article 36", "Article 51A", "Article 300A"],
+        answer: 2,
+        explanation: "Part IV-A (Article 51A) sets out the 11 Fundamental Duties of citizens."
+      }
+    ];
 
-    <div class="clock-rig">
-      <input type="range" id="timeSlider" min="0" max="10" step="1" value="0" aria-label="Time of day">
-      <div class="clock-track" aria-hidden="true">
-        <div class="clock-track__fill" id="clockFill"></div>
-        <div class="clock-stops" id="clockStops"></div>
-      </div>
-      <div class="clock-labels" id="clockLabels"></div>
-    </div>
+    /* --- EXPLORER LOGIC --- */
+    let currentFilter = 'all';
 
-    <div class="moment-card" id="momentCard"><!-- injected --></div>
-  </section>
+    function renderCards() {
+      const grid = document.getElementById('gridContainer');
+      const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+      grid.innerHTML = '';
 
-  <!-- PANEL 2: QUICK LOOKUP -->
-  <section class="panel" id="panel-lookup">
-    <div class="panel__intro panel__intro--narrow">
-      <p class="eyebrow">Search by what you're trying to do</p>
-      <h2>Looking for something specific?</h2>
-      <p class="lede">Type a word — "vote," "arrest," "school," "religion" — and see what applies.</p>
-    </div>
+      const filtered = scenarios.filter(item => {
+        const matchesFilter = currentFilter === 'all' || item.type === currentFilter;
+        const matchesSearch = item.title.toLowerCase().includes(searchTerm) || 
+                              item.description.toLowerCase().includes(searchTerm) ||
+                              item.article.toLowerCase().includes(searchTerm);
+        return matchesFilter && matchesSearch;
+      });
 
-    <input type="text" id="lookupSearch" class="lookup-search" placeholder="Try: arrest, vote, protest, education, religion…">
-    <div class="lookup-results" id="lookupResults"><!-- injected --></div>
-  </section>
+      if (filtered.length === 0) {
+        grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; color:var(--text-muted); padding:30px;">No scenarios found.</div>`;
+        return;
+      }
 
-  <!-- PANEL 3: FLIP CARDS -->
-  <section class="panel" id="panel-cards">
-    <div class="panel__intro panel__intro--narrow">
-      <p class="eyebrow">No score. No pressure. Just flip.</p>
-      <h2>Does the day stick with you?</h2>
-      <p class="lede">Each card asks what you'd do in a situation. Flip it to see the constitutional answer.</p>
-    </div>
+      filtered.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <div>
+            <span class="card-badge ${item.type === 'right' ? 'badge-right' : 'badge-duty'}">
+              ${item.type === 'right' ? 'Fundamental Right' : 'Fundamental Duty'}
+            </span>
+            <h3>${item.title}</h3>
+            <p>${item.description}</p>
+          </div>
+          <div class="card-footer">
+            <span class="article-tag">${item.article}</span>
+            <span class="takeaway">${item.takeaway}</span>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
 
-    <div class="flip-deck" id="flipDeck"><!-- injected --></div>
-    <div class="deck-nav">
-      <button id="deckPrev" class="deck-btn" aria-label="Previous card">←</button>
-      <span id="deckCount" class="deck-count"></span>
-      <button id="deckNext" class="deck-btn" aria-label="Next card">→</button>
-    </div>
-  </section>
+    function filterScenarios(type) {
+      currentFilter = type;
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+      renderCards();
+    }
 
-</main>
+    document.getElementById('searchInput').addEventListener('input', renderCards);
 
-<footer class="footer">
-  <p>Plain-language explanations for citizens — not the legal text and not legal advice. When it actually matters, read the Constitution of India itself or ask a professional.</p>
-</footer>
+    /* --- QUIZ LOGIC --- */
+    let currentQIndex = 0;
+    let score = 0;
 
-<script src="app.js"></script>
+    function startQuiz() {
+      currentQIndex = 0;
+      score = 0;
+      document.getElementById('quizContent').classList.remove('hidden');
+      document.getElementById('quizScoreBox').classList.add('hidden');
+      loadQuestion();
+    }
+
+    function loadQuestion() {
+      const q = quizQuestions[currentQIndex];
+      document.getElementById('questionTracker').innerText = `Question ${currentQIndex + 1} of ${quizQuestions.length}`;
+      document.getElementById('scoreTracker').innerText = `Score: ${score}`;
+      document.getElementById('quizQuestion').innerText = q.question;
+
+      const feedback = document.getElementById('quizFeedback');
+      feedback.className = 'quiz-feedback';
+      feedback.innerText = '';
+
+      document.getElementById('nextBtn').classList.add('hidden');
+
+      const optionsGrid = document.getElementById('optionsGrid');
+      optionsGrid.innerHTML = '';
+
+      q.options.forEach((opt, index) => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.innerText = opt;
+        btn.onclick = () => selectOption(index);
+        optionsGrid.appendChild(btn);
+      });
+    }
+
+    function selectOption(selectedIndex) {
+      const q = quizQuestions[currentQIndex];
+      const buttons = document.querySelectorAll('.option-btn');
+      const feedback = document.getElementById('quizFeedback');
+
+      buttons.forEach(btn => btn.disabled = true);
+
+      if (selectedIndex === q.answer) {
+        buttons[selectedIndex].classList.add('correct');
+        feedback.className = 'quiz-feedback show success';
+        feedback.innerText = `Correct! ${q.explanation}`;
+        score++;
+        document.getElementById('scoreTracker').innerText = `Score: ${score}`;
+      } else {
+        buttons[selectedIndex].classList.add('wrong');
+        buttons[q.answer].classList.add('correct');
+        feedback.className = 'quiz-feedback show error';
+        feedback.innerText = `Incorrect. ${q.explanation}`;
+      }
+
+      document.getElementById('nextBtn').classList.remove('hidden');
+    }
+
+    function nextQuestion() {
+      currentQIndex++;
+      if (currentQIndex < quizQuestions.length) {
+        loadQuestion();
+      } else {
+        showFinalScore();
+      }
+    }
+
+    function showFinalScore() {
+      document.getElementById('quizContent').classList.add('hidden');
+      document.getElementById('quizScoreBox').classList.remove('hidden');
+      document.getElementById('finalScoreText').innerText = `You scored ${score} out of ${quizQuestions.length}.`;
+    }
+
+    /* --- MODE SWITCHING --- */
+    function switchMode(mode) {
+      document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
+      if (mode === 'explorer') {
+        event.target.classList.add('active');
+        document.getElementById('explorerView').classList.remove('hidden');
+        document.getElementById('quizView').classList.add('hidden');
+      } else {
+        event.target.classList.add('active');
+        document.getElementById('explorerView').classList.add('hidden');
+        document.getElementById('quizView').classList.remove('hidden');
+        startQuiz();
+      }
+    }
+
+    // Initial render
+    renderCards();
+  </script>
 </body>
 </html>
