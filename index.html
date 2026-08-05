@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Day, Your Constitution</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Work+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar__inner">
+    <span class="logo">Your Day, Your <strong>Constitution</strong></span>
+    <div class="tabs" role="tablist">
+      <button class="tab is-active" data-panel="day" role="tab" aria-selected="true">A Day in Your Life</button>
+      <button class="tab" data-panel="lookup" role="tab" aria-selected="false">Quick Lookup</button>
+      <button class="tab" data-panel="cards" role="tab" aria-selected="false">Flip & Test</button>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- PANEL 1: DAY TIMELINE -->
+  <section class="panel is-active" id="panel-day">
+    <div class="panel__intro">
+      <p class="eyebrow">08 SEP · An ordinary Tuesday</p>
+      <h1>You touch the Constitution before breakfast.<br>You just don't notice.</h1>
+      <p class="lede">Drag the slider through an ordinary day. Every stop is something you already do — and an article of the Constitution quietly making it possible.</p>
+    </div>
+
+    <div class="clock-rig">
+      <input type="range" id="timeSlider" min="0" max="10" step="1" value="0" aria-label="Time of day">
+      <div class="clock-track" aria-hidden="true">
+        <div class="clock-track__fill" id="clockFill"></div>
+        <div class="clock-stops" id="clockStops"></div>
+      </div>
+      <div class="clock-labels" id="clockLabels"></div>
+    </div>
+
+    <div class="moment-card" id="momentCard"><!-- injected --></div>
+  </section>
+
+  <!-- PANEL 2: QUICK LOOKUP -->
+  <section class="panel" id="panel-lookup">
+    <div class="panel__intro panel__intro--narrow">
+      <p class="eyebrow">Search by what you're trying to do</p>
+      <h2>Looking for something specific?</h2>
+      <p class="lede">Type a word — "vote," "arrest," "school," "religion" — and see what applies.</p>
+    </div>
+
+    <input type="text" id="lookupSearch" class="lookup-search" placeholder="Try: arrest, vote, protest, education, religion…">
+    <div class="lookup-results" id="lookupResults"><!-- injected --></div>
+  </section>
+
+  <!-- PANEL 3: FLIP CARDS -->
+  <section class="panel" id="panel-cards">
+    <div class="panel__intro panel__intro--narrow">
+      <p class="eyebrow">No score. No pressure. Just flip.</p>
+      <h2>Does the day stick with you?</h2>
+      <p class="lede">Each card asks what you'd do in a situation. Flip it to see the constitutional answer.</p>
+    </div>
+
+    <div class="flip-deck" id="flipDeck"><!-- injected --></div>
+    <div class="deck-nav">
+      <button id="deckPrev" class="deck-btn" aria-label="Previous card">←</button>
+      <span id="deckCount" class="deck-count"></span>
+      <button id="deckNext" class="deck-btn" aria-label="Next card">→</button>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <p>Plain-language explanations for citizens — not the legal text and not legal advice. When it actually matters, read the Constitution of India itself or ask a professional.</p>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>
