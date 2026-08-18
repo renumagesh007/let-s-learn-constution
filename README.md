@@ -41,4 +41,9 @@ Everything here is a **simplified, plain-language explanation** — not the lega
 
 ## Extending it
 
-All content lives as plain JavaScript objects/arrays at the top of `app.js` (`RIGHTS`, `DUTIES`, `DIRECTIVES`, `BRANCHES`, `QUIZ`, `PROMISES`) — edit those arrays to add, remove, or reword content without touching the rendering logic.
+All content lives as plain JavaScript objects/arrays at the top of `app.js` (`RIGHTS`, `DUTIES`, `DIRECTIVES`, `BRANCHES`, `QUIZ`, `PROMISES`) — edit those arrays to add, remove, or reword content without touching the rendering logic
+
+## Prototype Video
+
+Watch the project demo here:https://youtu.be/2efVBKH9zpQ?si=OTFPeX-4PUl7WBt1
+
