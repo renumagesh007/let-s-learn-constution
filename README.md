@@ -45,5 +45,5 @@ All content lives as plain JavaScript objects/arrays at the top of `app.js` (`RI
 
 ## Prototype Video
 
-Watch the project demo here:https://youtu.be/2efVBKH9zpQ?si=OTFPeX-4PUl7WBt1
+Watch the project demo here: https://youtu.be/2CwLcm80cpE?si=b_nhdY3qEKBOzniI
 
